@@ -9,5 +9,5 @@ import (
 func main() {
 	r := gin.Default()
 	router.Routers(r)
-	fmt.Println("ha ha ha")
+	fmt.Println("haa")
 }
