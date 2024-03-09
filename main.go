@@ -7,6 +7,8 @@ import (
 
 func main() {
 	r := gin.Default()
+	r.Static("/static", "./static")
+	r.LoadHTMLGlob("templates/*")
 	router.Route(r)
 	_ = r.Run(":8083")
 }
