@@ -1,4 +1,4 @@
-package main
+package other
 
 import (
 	"fmt"
@@ -9,14 +9,20 @@ import (
 	"strconv"
 )
 
-func main() {
+func orm() {
 	username := "root"
 	password := "(PanandSu521125)"
 	host := "127.0.0.1:3306"
 	dbname := "exercise"
 	other := "charset=utf8mb4&parseTime=True&loc=Local"
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?%s", username, password, host, dbname, other)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?%s",
+		username,
+		password,
+		host,
+		dbname,
+		other,
+	)
 
 	config := &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
@@ -28,6 +34,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	type List struct {
 		gorm.Model
 		Name  string `gorm:"type:varchar(255);not null" json:"name" binding:"required"`
@@ -35,11 +42,14 @@ func main() {
 		Phone string `gorm:"type:varchar(255);not null" json:"phone" binding:"required"`
 		Age   int    `gorm:"type:int(11);not null" json:"age"`
 	}
+
 	err = db.AutoMigrate(&List{})
 	if err != nil {
 		return
 	}
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
 	r.POST("/user/add", func(c *gin.Context) {
 		var user List
 		err = c.ShouldBindJSON(user)
@@ -58,6 +68,7 @@ func main() {
 			})
 		}
 	})
+
 	r.DELETE("/user/delete/:id", func(c *gin.Context) {
 		var users []List
 		id := c.Param("id")
@@ -75,6 +86,7 @@ func main() {
 			})
 		}
 	})
+
 	r.POST("/user/update/:id", func(c *gin.Context) {
 		var user List
 		id := c.Param("id")
@@ -101,6 +113,7 @@ func main() {
 			}
 		}
 	})
+
 	r.GET("/user/list/:id", func(c *gin.Context) {
 		var users []List
 		id := c.Param("id")
@@ -118,6 +131,7 @@ func main() {
 			})
 		}
 	})
+
 	r.GET("/user/list", func(c *gin.Context) {
 		var users []List
 		pageSize, _ := strconv.Atoi(c.Query("pageSize"))
@@ -152,6 +166,7 @@ func main() {
 			})
 		}
 	})
+
 	port := "8083"
 	_ = r.Run(":" + port)
 }

@@ -5,14 +5,13 @@ import (
 	"golang-blog/controller"
 )
 
-func Routers(router *gin.Engine) {
+func Route(router *gin.Engine) {
 	root := router.Group("/")
 	fromRoot(root)
-	_ = router.Run("8083")
 }
 
 func fromRoot(group *gin.RouterGroup) {
-	group.GET("/", controller.IndexPage)
+	group.GET("", controller.IndexPage)
 	group.GET("register", controller.Register)
 	group.GET("login", controller.Login)
 	group.GET("logout", controller.Logout)
